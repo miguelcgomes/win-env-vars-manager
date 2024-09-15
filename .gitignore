@@ -1,0 +1,12 @@
+# Exclude all files in the "input" and "output" directories
+input/
+output/
+
+# Exclude the batch file
+*.bat
+
+# Exclude any temporary files ending with ~
+*~
+
+# Only consider .py files
+!*.py
