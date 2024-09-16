@@ -97,9 +97,17 @@ def delete_variables_from_csv():
 
 def _persist_env_variable(key, value):
     """Persist environment variable permanently in Windows."""
-    subprocess.run(['setx', key, value], shell=True)
-    print(f"Permanently added '{key}' with value '{value}' to Windows environment variables.")
-    print("Note: The variable will be visible in new sessions, but we will reload from the registry now.")
+    # Construct the command string with proper escaping for special characters like & and ^.
+    command = f'setx {key} "{value}"'
+
+    # Execute the command as a string (not a list) to properly handle special characters.
+    result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    if result.returncode == 0:
+        print(f"Permanently added '{key}' with value '{value}' to Windows environment variables.")
+        print("Note: The variable will be visible in new sessions, but we will reload from the registry now.")
+    else:
+        print(f"Failed to add '{key}' with value '{value}' to environment variables. Error: {result.stderr.decode()}")
 
 
 def _remove_env_variable(key):
